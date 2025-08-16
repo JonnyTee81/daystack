@@ -1,0 +1,104 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String        @id @default(cuid())
+  email         String        @unique
+  name          String?
+  image         String?
+  emailVerified DateTime?
+  accounts      Account[]
+  sessions      Session[]
+  metrics       DailyMetric[]
+  habits        Habit[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model DailyMetric {
+  id           String      @id @default(cuid())
+  userId       String
+  date         DateTime    @db.Date
+  mood         Int         // 1-10
+  energy       Int         // 1-10
+  productivity Int         // 1-10
+  note         String?     @db.Text
+  momentum     Float       // Calculated score
+  habitLogs    HabitLog[]
+  user         User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  @@unique([userId, date])
+  @@index([userId, date])
+}
+
+model Habit {
+  id        String      @id @default(cuid())
+  userId    String
+  name      String
+  type      String      @default("boolean") // "boolean" or "quantity"
+  target    Int?        // For quantity types
+  color     String      @default("#10B981")
+  isActive  Boolean     @default(true)
+  order     Int         @default(0)
+  logs      HabitLog[]
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@index([userId])
+}
+
+model HabitLog {
+  id          String      @id @default(cuid())
+  habitId     String
+  metricId    String
+  completed   Boolean     @default(false)
+  value       Int?        // For quantity tracking
+  habit       Habit       @relation(fields: [habitId], references: [id], onDelete: Cascade)
+  dailyMetric DailyMetric @relation(fields: [metricId], references: [id], onDelete: Cascade)
+  createdAt   DateTime    @default(now())
+
+  @@unique([habitId, metricId])
+  @@index([metricId])
+}
