@@ -18,21 +18,12 @@ const createInnerTRPCContext = (opts: CreateContextOptions) => {
   };
 };
 
-export const createTRPCContext = async (opts: {
+export const createTRPCContext = async (_opts: {
   headers: Headers;
 } | CreateNextContextOptions) => {
-  let session: Session | null = null;
-  
-  if ('req' in opts && 'res' in opts) {
-    // Pages Router
-    session = await getServerSession(opts.req, opts.res, authOptions);
-  } else {
-    // App Router - we'll handle this differently in the route handler
-    session = null;
-  }
-
+  // For App Router, we'll get the session in the middleware instead
   return createInnerTRPCContext({
-    session,
+    session: null,
   });
 };
 
@@ -54,13 +45,18 @@ export const createTRPCRouter = t.router;
 
 export const publicProcedure = t.procedure;
 
-const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
-  if (!ctx.session || !ctx.session.user) {
+const enforceUserIsAuthed = t.middleware(async ({ ctx, next }) => {
+  // Get session dynamically for App Router
+  const session = await getServerSession(authOptions);
+  
+  if (!session || !session.user) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
+  
   return next({
     ctx: {
-      session: { ...ctx.session, user: ctx.session.user },
+      session: { ...session, user: session.user },
+      db: ctx.db,
     },
   });
 });
