@@ -67,62 +67,72 @@ export default function Home() {
 
         {/* Features Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-20">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                📊 Daily Metrics
-              </CardTitle>
-              <CardDescription>
-                Track your mood, energy, and productivity levels on a 1-10 scale
-              </CardDescription>
-            </CardHeader>
-          </Card>
+          <Link href={session ? "/dashboard" : "/sign-in"}>
+            <Card className="hover:shadow-md transition-shadow cursor-pointer">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  📊 Daily Metrics
+                </CardTitle>
+                <CardDescription>
+                  Track your mood, energy, and productivity levels on a 1-10 scale
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          </Link>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                ✅ Custom Habits
-              </CardTitle>
-              <CardDescription>
-                Create and track both boolean and quantity-based habits
-              </CardDescription>
-            </CardHeader>
-          </Card>
+          <Link href={session ? "/habits" : "/sign-in"}>
+            <Card className="hover:shadow-md transition-shadow cursor-pointer">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  ✅ Custom Habits
+                </CardTitle>
+                <CardDescription>
+                  Create and track both boolean and quantity-based habits
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          </Link>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                🔥 Heatmap Visualization
-              </CardTitle>
-              <CardDescription>
-                Visualize your consistency with beautiful GitHub-style heatmaps
-              </CardDescription>
-            </CardHeader>
-          </Card>
+          <Link href={session ? "/insights" : "/sign-in"}>
+            <Card className="hover:shadow-md transition-shadow cursor-pointer">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  🔥 Heatmap Visualization
+                </CardTitle>
+                <CardDescription>
+                  Visualize your consistency with beautiful GitHub-style heatmaps
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          </Link>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                📈 Analytics
-              </CardTitle>
-              <CardDescription>
-                View trends, streaks, and detailed progress statistics
-              </CardDescription>
-            </CardHeader>
-          </Card>
+          <Link href={session ? "/insights" : "/sign-in"}>
+            <Card className="hover:shadow-md transition-shadow cursor-pointer">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  📈 Analytics
+                </CardTitle>
+                <CardDescription>
+                  View trends, streaks, and detailed progress statistics
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          </Link>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                🌙 Dark Mode
-              </CardTitle>
-              <CardDescription>
-                Beautiful interface that adapts to your preference
-              </CardDescription>
-            </CardHeader>
-          </Card>
+          <Link href={session ? "/settings" : "/sign-in"}>
+            <Card className="hover:shadow-md transition-shadow cursor-pointer">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  🌙 Dark Mode
+                </CardTitle>
+                <CardDescription>
+                  Beautiful interface that adapts to your preference
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          </Link>
 
-          <Card>
+          <Card className="hover:shadow-md transition-shadow">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 📱 Responsive
@@ -131,7 +141,7 @@ export default function Home() {
                 Works seamlessly on desktop and mobile devices
               </CardDescription>
             </CardHeader>
-          </Card>
+            </Card>
         </div>
       </div>
     </div>

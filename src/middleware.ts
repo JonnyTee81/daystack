@@ -7,14 +7,9 @@ export default withAuth(
   },
   {
     callbacks: {
-      authorized: ({ token, req }) => {
-        // Check if user is authenticated for protected routes
-        if (req.nextUrl.pathname.startsWith("/dashboard")) {
-          return !!token;
-        }
-        
-        // Allow access to other routes
-        return true;
+      authorized: ({ token }) => {
+        // Simply check if user has a valid token
+        return !!token;
       },
     },
   }
@@ -22,8 +17,10 @@ export default withAuth(
 
 export const config = {
   matcher: [
-    // Protect dashboard routes
+    // Protect authenticated routes
     "/dashboard/:path*",
-    // Add other protected routes here
+    "/habits/:path*",
+    "/insights/:path*",
+    "/settings/:path*",
   ],
 };

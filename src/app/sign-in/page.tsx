@@ -19,6 +19,7 @@ export default function SignInPage() {
     // Check if user is already signed in
     getSession().then((session) => {
       if (session) {
+        console.log("User already has session:", session);
         router.push("/dashboard");
       }
     });
@@ -46,10 +47,13 @@ export default function SignInPage() {
       const result = await signIn("email", {
         email,
         redirect: false,
+        callbackUrl: "/dashboard",
       });
       
       if (result?.ok) {
         setEmailSent(true);
+      } else if (result?.error) {
+        console.error("Email sign in failed:", result.error);
       }
     } catch (error) {
       console.error("Email sign in error:", error);

@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth";
 import { TRPCReactProvider } from "@/trpc/client";
 import { ThemeProvider } from "next-themes";
 import { AuthSessionProvider } from "@/components/session-provider";
+import { Toaster } from "sonner";
 import { authOptions } from "@/server/auth";
 import "./globals.css";
 
@@ -43,6 +44,7 @@ export default async function RootLayout({
               disableTransitionOnChange
             >
               {children}
+              <Toaster richColors position="top-right" />
             </ThemeProvider>
           </TRPCReactProvider>
         </AuthSessionProvider>

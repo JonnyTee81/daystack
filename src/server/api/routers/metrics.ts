@@ -9,7 +9,7 @@ export const metricsRouter = createTRPCRouter({
         mood: z.number().min(1).max(10),
         energy: z.number().min(1).max(10),
         productivity: z.number().min(1).max(10),
-        note: z.string().optional(),
+        note: z.string().nullable().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {

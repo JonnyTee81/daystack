@@ -20,11 +20,17 @@ declare module "next-auth" {
 
 export const authOptions: NextAuthOptions = {
   callbacks: {
-    session: ({ session, user }) => ({
+    jwt: async ({ token, user }) => {
+      if (user) {
+        token.userId = user.id;
+      }
+      return token;
+    },
+    session: ({ session, token }) => ({
       ...session,
       user: {
         ...session.user,
-        id: user.id,
+        id: token.userId as string,
       },
     }),
     signIn: async ({ user, account, profile }) => {
@@ -33,6 +39,10 @@ export const authOptions: NextAuthOptions = {
       console.log("User signed in:", user.email);
       return true;
     },
+  },
+  session: {
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   adapter: PrismaAdapter(db) as Adapter,
   providers: [
