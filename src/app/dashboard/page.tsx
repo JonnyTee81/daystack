@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import AppLayout from "@/components/layout/app-layout";
 import TodayMetricsDisplay from "@/components/metrics/today-metrics-display";
+import HabitTracker from "@/components/habits/habit-tracker";
 import { Calendar, Target, TrendingUp, Plus } from "lucide-react";
 
 export default function DashboardPage() {
@@ -155,6 +156,11 @@ export default function DashboardPage() {
           {/* Today's Metrics */}
           <div ref={metricsRef} className="mb-8">
             <TodayMetricsDisplay />
+          </div>
+
+          {/* Today's Habits */}
+          <div className="mb-8">
+            <HabitTracker />
           </div>
 
           {/* Recent Activity */}

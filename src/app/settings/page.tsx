@@ -1,6 +1,24 @@
+"use client";
+
+import { useState } from "react";
 import AppLayout from "@/components/layout/app-layout";
+import ProfileSettings from "@/components/settings/profile-settings";
+import ThemeSettings from "@/components/settings/theme-settings";
+import NotificationSettings from "@/components/settings/notification-settings";
+import DataManagementSettings from "@/components/settings/data-management-settings";
+import TimezoneSettings from "@/components/settings/timezone-settings";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { 
+  User, 
+  Palette, 
+  Bell, 
+  Database, 
+  Globe
+} from "lucide-react";
 
 export default function SettingsPage() {
+  const [activeTab, setActiveTab] = useState("profile");
+
   return (
     <AppLayout>
       <div className="p-8">
@@ -14,40 +32,57 @@ export default function SettingsPage() {
             </p>
             
             {/* Navigation Confirmation */}
-            <div className="mt-4 p-3 bg-orange-50 dark:bg-orange-900/20 rounded-lg border border-orange-200 dark:border-orange-800">
-              <p className="text-sm text-orange-700 dark:text-orange-300">
-                ✅ Navigation working! You successfully reached the Settings page.
+            <div className="mt-4 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+              <p className="text-sm text-green-700 dark:text-green-300">
+                ✅ Complete settings dashboard now available! Manage your profile, appearance, notifications, and data.
               </p>
             </div>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg p-8">
-            <div className="text-center">
-              <div className="mx-auto h-24 w-24 text-gray-400">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1}
-                    d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1}
-                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                </svg>
-              </div>
-              <h3 className="mt-4 text-lg font-medium text-gray-900 dark:text-white">
-                App Settings
-              </h3>
-              <p className="mt-2 text-gray-500 dark:text-gray-400">
-                This section will allow you to customize themes, notification preferences, and manage your account settings.
-                Coming in Phase 11!
-              </p>
-            </div>
-          </div>
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+            <TabsList className="grid w-full grid-cols-5">
+              <TabsTrigger value="profile" className="flex items-center gap-2">
+                <User className="h-4 w-4" />
+                <span className="hidden sm:inline">Profile</span>
+              </TabsTrigger>
+              <TabsTrigger value="appearance" className="flex items-center gap-2">
+                <Palette className="h-4 w-4" />
+                <span className="hidden sm:inline">Appearance</span>
+              </TabsTrigger>
+              <TabsTrigger value="notifications" className="flex items-center gap-2">
+                <Bell className="h-4 w-4" />
+                <span className="hidden sm:inline">Notifications</span>
+              </TabsTrigger>
+              <TabsTrigger value="data" className="flex items-center gap-2">
+                <Database className="h-4 w-4" />
+                <span className="hidden sm:inline">Data</span>
+              </TabsTrigger>
+              <TabsTrigger value="timezone" className="flex items-center gap-2">
+                <Globe className="h-4 w-4" />
+                <span className="hidden sm:inline">Timezone</span>
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="profile" className="space-y-6">
+              <ProfileSettings />
+            </TabsContent>
+
+            <TabsContent value="appearance" className="space-y-6">
+              <ThemeSettings />
+            </TabsContent>
+
+            <TabsContent value="notifications" className="space-y-6">
+              <NotificationSettings />
+            </TabsContent>
+
+            <TabsContent value="data" className="space-y-6">
+              <DataManagementSettings />
+            </TabsContent>
+
+            <TabsContent value="timezone" className="space-y-6">
+              <TimezoneSettings />
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
     </AppLayout>

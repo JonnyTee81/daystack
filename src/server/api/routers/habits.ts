@@ -19,7 +19,7 @@ export const habitsRouter = createTRPCRouter({
       z.object({
         name: z.string().min(1).max(100),
         type: z.enum(["boolean", "quantity"]),
-        target: z.number().optional(),
+        target: z.number().nullable().optional(),
         color: z.string().regex(/^#[0-9A-F]{6}$/i),
       })
     )
@@ -45,7 +45,7 @@ export const habitsRouter = createTRPCRouter({
         id: z.string(),
         name: z.string().min(1).max(100).optional(),
         type: z.enum(["boolean", "quantity"]).optional(),
-        target: z.number().optional(),
+        target: z.number().nullable().optional(),
         color: z.string().regex(/^#[0-9A-F]{6}$/i).optional(),
       })
     )
@@ -94,5 +94,55 @@ export const habitsRouter = createTRPCRouter({
       );
 
       return ctx.db.$transaction(updates);
+    }),
+
+  updateLog: protectedProcedure
+    .input(
+      z.object({
+        habitId: z.string(),
+        date: z.date(),
+        completed: z.boolean(),
+        value: z.number().nullable().optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      // First, ensure we have a daily metric record for this date
+      const dailyMetric = await ctx.db.dailyMetric.upsert({
+        where: {
+          userId_date: {
+            userId: ctx.session.user.id,
+            date: input.date,
+          },
+        },
+        update: {},
+        create: {
+          userId: ctx.session.user.id,
+          date: input.date,
+          mood: 5,
+          energy: 5,
+          productivity: 5,
+          momentum: 5,
+        },
+      });
+
+      // Then upsert the habit log
+      return ctx.db.habitLog.upsert({
+        where: {
+          habitId_metricId: {
+            habitId: input.habitId,
+            metricId: dailyMetric.id,
+          },
+        },
+        update: {
+          completed: input.completed,
+          value: input.value,
+        },
+        create: {
+          habitId: input.habitId,
+          metricId: dailyMetric.id,
+          completed: input.completed,
+          value: input.value,
+        },
+      });
     }),
 });
